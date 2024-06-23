@@ -1,11 +1,14 @@
-package com.example.alpha.airport.dto;
+package com.example.alpha.airport.model;
 
-public class AirportDto {
+import com.example.alpha.city.model.CityDTO;
+
+public class AirportDTO {
     private Long id;
     private String name;
-    private Long designatedCityId;
+    private CityDTO city;
 
     // Getters and Setters
+
     public Long getId() {
         return id;
     }
@@ -22,11 +25,11 @@ public class AirportDto {
         this.name = name;
     }
 
-    public Long getDesignatedCityId() {
-        return designatedCityId;
+    public CityDTO getCity() {
+        return city;
     }
 
-    public void setDesignatedCityId(Long designatedCityId) {
-        this.designatedCityId = designatedCityId;
+    public void setCity(CityDTO city) {
+        this.city = city;
     }
 }

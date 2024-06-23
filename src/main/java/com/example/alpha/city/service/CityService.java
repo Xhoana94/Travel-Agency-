@@ -1,14 +1,14 @@
 package com.example.alpha.city.service;
 
-
-import com.example.alpha.city.dto.CityDTO;
 import com.example.alpha.city.mapper.CityMapper;
 import com.example.alpha.city.model.City;
+import com.example.alpha.city.model.CityDTO;
 import com.example.alpha.city.repository.CityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,37 +18,44 @@ public class CityService {
     private CityRepository cityRepository;
 
     public List<CityDTO> getAllCities() {
-        return cityRepository.findAll().stream()
-                .map(CityMapper::toDTO)
-                .collect(Collectors.toList());
+        List<City> cities = cityRepository.findAll();
+        return cities.stream().map(CityMapper::toDTO).collect(Collectors.toList());
     }
 
     public CityDTO getCityById(Long id) {
-        City city = cityRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("City not found with id: " + id));
+        Optional<City> cityOptional = cityRepository.findById(id);
+        if (cityOptional.isPresent()) {
+            return CityMapper.toDTO(cityOptional.get());
+        } else {
+            throw new RuntimeException("City not found with id: " + id);
+        }
+    }
+
+    public CityDTO saveCity(CityDTO dto) {
+        City city = CityMapper.toEntity(dto);
+        city = cityRepository.save(city);
         return CityMapper.toDTO(city);
     }
 
-    public CityDTO createCity(CityDTO cityDTO) {
-        City city = CityMapper.toEntity(cityDTO);
-        City savedCity = cityRepository.save(city);
-        return CityMapper.toDTO(savedCity);
-    }
-
-    public CityDTO updateCity(Long id, CityDTO cityDTO) {
-
-        City existingCity = cityRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("City not found with id: " + id));
-        existingCity.setName(cityDTO.getName());
-        existingCity.setNationality(cityDTO.getNationality());
-        City updatedCity = cityRepository.save(existingCity);
-        return CityMapper.toDTO(updatedCity);
+    public CityDTO updateCity(Long id, CityDTO dto) {
+        Optional<City> cityOptional = cityRepository.findById(id);
+        if (cityOptional.isPresent()) {
+            City city = cityOptional.get();
+            city.setName(dto.getName());
+            city.setNationality(dto.getNationality());
+            city = cityRepository.save(city);
+            return CityMapper.toDTO(city);
+        } else {
+            throw new RuntimeException("City not found with id: " + id);
+        }
     }
 
     public void deleteCity(Long id) {
-        if (!cityRepository.existsById(id)) {
+        Optional<City> cityOptional = cityRepository.findById(id);
+        if (cityOptional.isPresent()) {
+            cityRepository.delete(cityOptional.get());
+        } else {
             throw new RuntimeException("City not found with id: " + id);
         }
-        cityRepository.deleteById(id);
     }
 }

@@ -1,38 +1,18 @@
 package com.example.alpha.city.model;
 
-import com.example.alpha.airport.model.Airport;
-import com.example.alpha.hotel.model.Hotel;
-import jakarta.persistence.*;
+import com.example.alpha.airport.model.AirportDTO;
+import com.example.alpha.hotel.model.HotelDTO;
 
 import java.util.List;
 
-@Entity
-public class City {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class CityDTO {
     private Long id;
-
     private String name;
     private String nationality;
+    private List<HotelDTO> hotels;
+    private List<AirportDTO> airports;
 
-    @OneToMany(mappedBy = "city")
-    private List<Hotel> hotels;
-
-    @OneToMany(mappedBy = "city")
-    private List<Airport> airports;
-
-    public City() {
-    }
-
-    public City(Long id, String name, String nationality) {
-
-        this.id = id;
-        this.name = name;
-        this.nationality = nationality;
-
-    }
-
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -55,5 +35,21 @@ public class City {
 
     public void setNationality(String nationality) {
         this.nationality = nationality;
+    }
+
+    public List<HotelDTO> getHotels() {
+        return hotels;
+    }
+
+    public void setHotels(List<HotelDTO> hotels) {
+        this.hotels = hotels;
+    }
+
+    public List<AirportDTO> getAirports() {
+        return airports;
+    }
+
+    public void setAirports(List<AirportDTO> airports) {
+        this.airports = airports;
     }
 }

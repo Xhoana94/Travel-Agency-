@@ -1,6 +1,5 @@
 package com.example.alpha.airport.model;
 
-
 import com.example.alpha.city.model.City;
 import jakarta.persistence.*;
 
@@ -14,31 +13,40 @@ public class Airport {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "city_id", nullable = false)
-    private City designatedCity;
+    @JoinColumn(name = "city_id")
+    private City city;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    public Airport(Long id, String name, City city) {
+        this.id = id;
+        this.name = name;
+        this.city = city;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Airport(){
+
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
         return name;
     }
 
+    public City getCity() {
+        return city;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
-    public City getDesignatedCity() {
-        return designatedCity;
-    }
-
-    public void setDesignatedCity(City designatedCity) {
-        this.designatedCity = designatedCity;
+    public void setCity(City city) {
+        this.city = city;
     }
 }
